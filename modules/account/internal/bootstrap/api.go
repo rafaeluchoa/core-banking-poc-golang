@@ -28,17 +28,29 @@ func NewApiApp(config *ApiConfig) *ApiApp {
 		EnablePrintRoutes:     true,
 	})
 
-	port := fmt.Sprintf("%s:%s", config.Bind, config.Port)
-	log.Printf("Loading on %s", port)
-
 	return &ApiApp{
 		app:  app,
-		port: port,
+		port: fmt.Sprintf("%s:%s", config.Bind, config.Port),
 	}
 }
 
-func (s *ApiApp) Run() error {
-	return s.app.Listen(s.port)
+func (s *ApiApp) Run(done chan error) {
+	s.app.Hooks().OnListen(func(l fiber.ListenData) error {
+		if fiber.IsChild() {
+			return nil
+		}
+
+		log.Printf("Loading on %s:%s", l.Host, l.Port)
+		done <- nil
+
+		return nil
+	})
+
+	err := s.app.Listen(s.port)
+	if err != nil {
+		done <- err
+		log.Panicf("Error on run app: %s\n", err)
+	}
 }
 
 func (s *ApiApp) AddController(ctr Controller) {

@@ -6,7 +6,7 @@ import (
 )
 
 type App interface {
-	Run() error
+	Run(done chan error)
 }
 
 type Launcher struct {
@@ -28,14 +28,18 @@ func (s *Launcher) Run(app App) {
 	s.apps = append(s.apps, &app)
 	count := len(s.apps)
 	s.wg.Add(count)
+
+	done := make(chan error)
+
 	go func() {
 		defer s.wg.Done()
-
-		err := app.Run()
-		if err != nil {
-			log.Panicln(err, "failed to run the server")
-		}
+		app.Run(done)
 	}()
+
+	err := <-done
+	if err != nil {
+		log.Panicln(err, "Stoping")
+	}
 }
 
 func (s *Launcher) Wait() {
