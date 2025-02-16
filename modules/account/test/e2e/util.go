@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"nk/account/app"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -22,7 +21,6 @@ func UUID() string {
 
 func Setup() {
 	app.Run("../../../")
-	time.Sleep(1 * time.Second)
 }
 
 func Post[T any](uri string, req any) *T {
