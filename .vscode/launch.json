@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "account",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/modules/account/main.go",
+            "cwd": "${workspaceFolder}/modules/account",
+            "console": "integratedTerminal",
+        }
+    ]
+}
