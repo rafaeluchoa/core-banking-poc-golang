@@ -3,7 +3,9 @@ package app
 import (
 	"database/sql"
 	"nk/account/api"
-	"nk/account/internal/bootstrap"
+	"nk/account/internal/boot"
+	"nk/account/internal/repo"
+	"nk/account/internal/uc"
 )
 
 const (
@@ -14,38 +16,82 @@ func Start() {
 	Run(".").Wait()
 }
 
-func Run(path string) *bootstrap.Launcher {
-	l := bootstrap.NewLauncher()
+func Run(path string) *boot.Launcher {
 
-	db := runDb(path, l)
-	runMigration(path, l, db.GetDb())
-	runApi(path, l)
+	s := &server{
+		path: path,
+		c:    boot.NewContext(),
+		l:    boot.NewLauncher(),
+	}
 
-	return l
+	s.registerDb()
+	s.registerMigration()
+
+	s.registerAccount()
+
+	s.registerApi()
+
+	return s.l
 }
 
-func runDb(path string, l *bootstrap.Launcher) *bootstrap.DbApp {
-	db := bootstrap.NewDbApp(
-		bootstrap.Load[bootstrap.DbConfig](path, CONFIG, "db"),
+type server struct {
+	path string
+	c    *boot.Context
+	l    *boot.Launcher
+}
+
+func (s *server) registerDb() {
+	db := boot.NewDbApp(
+		boot.Load[boot.DbConfig](s.path, CONFIG, "db"),
 	)
-	l.Run(db)
-	return db
+	s.l.Run(db)
+
+	boot.Register(s.c, func(c *boot.Context) *sql.DB {
+		return db.GetDb()
+	})
 }
 
-func runMigration(path string, l *bootstrap.Launcher, db *sql.DB) {
-	migration := bootstrap.NewMigrationApp(
-		bootstrap.Load[bootstrap.MigrationConfig](path, CONFIG, "migration"),
+func (s *server) registerMigration() {
+	db := boot.Get[sql.DB](s.c)
+
+	migration := boot.NewMigrationApp(
+		boot.Load[boot.MigrationConfig](s.path, CONFIG, "migration"),
 		db,
+		s.path,
 	)
-	l.Run(migration)
+
+	s.l.Run(migration)
 }
 
-func runApi(path string, l *bootstrap.Launcher) {
-	apiApp := bootstrap.NewApiApp(
-		bootstrap.Load[bootstrap.ApiConfig](path, CONFIG, "api"),
+func (s *server) registerApi() {
+	apiApp := boot.NewApiApp(
+		boot.Load[boot.ApiConfig](s.path, CONFIG, "api"),
 	)
 
-	apiApp.AddController(api.NewAccountCtr())
+	apiApp.AddController(boot.Get[api.AccountCtr](s.c))
 
-	l.Run(apiApp)
+	s.l.Run(apiApp)
+}
+
+func (s *server) registerAccount() {
+	boot.Register(s.c, func(c *boot.Context) *repo.AccountRepo {
+		db := boot.Get[sql.DB](c)
+		return repo.NewAccountRepo(db)
+	})
+
+	boot.Register(s.c, func(c *boot.Context) *uc.AccountCreateUc {
+		repo := boot.Get[repo.AccountRepo](c)
+		return uc.NewAccountCreateUc(repo)
+	})
+
+	boot.Register(s.c, func(c *boot.Context) *uc.AccountListUc {
+		repo := boot.Get[repo.AccountRepo](c)
+		return uc.NewAccountListUc(repo)
+	})
+
+	boot.Register(s.c, func(c *boot.Context) *api.AccountCtr {
+		createUc := boot.Get[uc.AccountCreateUc](c)
+		listUc := boot.Get[uc.AccountListUc](c)
+		return api.NewAccountCtr(createUc, listUc)
+	})
 }

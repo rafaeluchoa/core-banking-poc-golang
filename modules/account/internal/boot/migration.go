@@ -1,7 +1,8 @@
-package bootstrap
+package boot
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -17,12 +18,14 @@ type MigrationConfig struct {
 type MigrationApp struct {
 	config *MigrationConfig
 	db     *sql.DB
+	path   string
 }
 
-func NewMigrationApp(config *MigrationConfig, db *sql.DB) *MigrationApp {
+func NewMigrationApp(config *MigrationConfig, db *sql.DB, path string) *MigrationApp {
 	return &MigrationApp{
 		config: config,
 		db:     db,
+		path:   path,
 	}
 }
 
@@ -33,8 +36,9 @@ func (s *MigrationApp) Run(done chan error) {
 		log.Panicf("Error on migration %v", err)
 	}
 
+	source := fmt.Sprintf("file://%s%s", s.path, s.config.Dir)
 	m, err := migrate.NewWithDatabaseInstance(
-		s.config.Dir, s.config.Name, driver)
+		source, s.config.Name, driver)
 	if err != nil {
 		done <- err
 		log.Panicf("Error on migration %v", err)

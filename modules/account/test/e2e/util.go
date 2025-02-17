@@ -7,17 +7,11 @@ import (
 	"log"
 	"net/http"
 	"nk/account/app"
-
-	"github.com/google/uuid"
 )
 
 const (
 	URL = "http://localhost:8080"
 )
-
-func UUID() string {
-	return uuid.Must(uuid.NewV7()).String()
-}
 
 func Setup() {
 	app.Run("../../../")

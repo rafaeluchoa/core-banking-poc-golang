@@ -1,4 +1,4 @@
-package bootstrap
+package boot
 
 import (
 	"fmt"
@@ -49,7 +49,6 @@ func (s *ApiApp) Run(done chan error) {
 	err := s.app.Listen(s.port)
 	if err != nil {
 		done <- err
-		log.Panicf("Error on run app: %s\n", err)
 	}
 }
 

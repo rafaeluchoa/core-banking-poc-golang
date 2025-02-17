@@ -1,4 +1,4 @@
-package bootstrap
+package boot
 
 import (
 	"database/sql"

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS account
 (
-    id                              UUID PRIMARY KEY NOT NULL,
-    customer_id                     UUID
+    id                              TEXT PRIMARY KEY NOT NULL,
+    customer_id                     TEXT
 );

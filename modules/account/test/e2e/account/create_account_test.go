@@ -9,21 +9,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListAccountSuccess(t *testing.T) {
+func TestCreateAccountSuccess(t *testing.T) {
 	// Setup
 	e2e.Setup()
 
 	// Arrange
 	customerId := repo.UUID()
 
-	req := &api.AccountListReq{
+	req := &api.AccountCreateReq{
 		CustomerId: customerId,
 	}
 
 	// Act
-	// TODO: get
-	res := e2e.Post[api.AccountListRes](api.API_ACCOUNT, req)
+	res := e2e.Post[api.AccountCreateRes](api.API_ACCOUNT, req)
 
 	// Assert
-	assert.NotNil(t, res.Accounts)
+	assert.Empty(t, res.Message)
+	assert.NotEmpty(t, res.AccountId)
 }
