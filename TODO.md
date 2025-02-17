@@ -1,4 +1,3 @@
-pg
 swagger
 mongo
 coverage

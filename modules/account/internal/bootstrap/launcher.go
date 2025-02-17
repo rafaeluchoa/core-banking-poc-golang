@@ -26,9 +26,7 @@ func NewLauncher() *Launcher {
 
 func (s *Launcher) Run(app App) {
 	s.apps = append(s.apps, &app)
-	count := len(s.apps)
-	s.wg.Add(count)
-
+	s.wg.Add(1)
 	done := make(chan error)
 
 	go func() {

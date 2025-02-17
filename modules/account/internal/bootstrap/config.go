@@ -34,6 +34,7 @@ func Load[T any](path string, file string, section string) *T {
 	return &config
 }
 
+// TODO: url do postgresql
 // ${VAR:default}
 func getEnvVar(value string) string {
 	re := regexp.MustCompile(`\${([^:}]+):([^}]+)}`)

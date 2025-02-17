@@ -1,0 +1,58 @@
+package bootstrap
+
+import (
+	"database/sql"
+	"log"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
+)
+
+type DbConfig struct {
+	Url      string
+	User     string
+	Password string
+}
+
+type DbApp struct {
+	config *DbConfig
+	db     *sql.DB
+}
+
+func NewDbApp(config *DbConfig) *DbApp {
+	return &DbApp{
+		config: config,
+	}
+}
+
+func (s *DbApp) Run(done chan error) {
+	pgxConfig, err := pgxpool.ParseConfig(s.config.Url)
+	if err != nil {
+		done <- err
+		log.Panicf("Error on parse url: %v", err)
+	}
+
+	pgxConfig.ConnConfig.User = s.config.User
+	pgxConfig.ConnConfig.Password = s.config.Password
+
+	connStr := stdlib.RegisterConnConfig(pgxConfig.ConnConfig)
+	db, err := sql.Open("pgx", connStr)
+	if err != nil {
+		done <- err
+		log.Panicf("Error on connect %v", err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		done <- err
+		log.Panicf("Error pinging db: %v", err)
+	}
+
+	s.db = db
+	log.Println("DB Connected")
+	done <- nil
+}
+
+func (s DbApp) GetDb() *sql.DB {
+	return s.db
+}
