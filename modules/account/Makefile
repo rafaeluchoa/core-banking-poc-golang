@@ -5,7 +5,7 @@ test:
 .PHONY: cover
 cover:
 	go test ./... -coverprofile=./build/coverage.out
-	go tool cover -func=./build/coverage.out -o ./build/coverage.txt
+	go tool cover -html=./build/coverage.out -o ./build/coverage.html
 
 
 .PHONY: build

@@ -15,15 +15,16 @@ func TestListAccountSuccess(t *testing.T) {
 
 	// Arrange
 	customerId := repo.UUID()
+	expectedAccountId := CreateAccount(t, customerId)
 
 	req := &api.AccountListReq{
 		CustomerId: customerId,
 	}
 
 	// Act
-	// TODO: get
-	res := e2e.Post[api.AccountListRes](api.API_ACCOUNT, req)
+	res := e2e.Get[api.AccountListRes](api.API_ACCOUNT, req)
 
 	// Assert
 	assert.NotNil(t, res.Accounts)
+	assert.Equal(t, res.Accounts[0].Id, expectedAccountId)
 }
