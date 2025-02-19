@@ -10,3 +10,7 @@ db:
 migration:
   name: postgres
   dir: /migration
+
+bus: 
+  broker: localhost:9092
+  groupId: account

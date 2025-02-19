@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"nk/account/api"
 	"nk/account/internal/boot"
-	"nk/account/internal/repo"
-	"nk/account/internal/uc"
 )
 
 const (
@@ -26,6 +24,8 @@ func Run(path string) *boot.Launcher {
 
 	s.registerDb()
 	s.registerMigration()
+
+	s.registerBus()
 
 	s.registerAccount()
 
@@ -73,25 +73,12 @@ func (s *server) registerApi() {
 	s.l.Run(apiApp)
 }
 
-func (s *server) registerAccount() {
-	boot.Register(s.c, func(c *boot.Context) *repo.AccountRepo {
-		db := boot.Get[sql.DB](c)
-		return repo.NewAccountRepo(db)
-	})
+func (s *server) registerBus() {
+	bus := boot.NewEventBus(
+		boot.Load[boot.KafkaConfig](s.path, CONFIG, "bus"),
+	)
 
-	boot.Register(s.c, func(c *boot.Context) *uc.AccountCreateUc {
-		repo := boot.Get[repo.AccountRepo](c)
-		return uc.NewAccountCreateUc(repo)
-	})
-
-	boot.Register(s.c, func(c *boot.Context) *uc.AccountListUc {
-		repo := boot.Get[repo.AccountRepo](c)
-		return uc.NewAccountListUc(repo)
-	})
-
-	boot.Register(s.c, func(c *boot.Context) *api.AccountCtr {
-		createUc := boot.Get[uc.AccountCreateUc](c)
-		listUc := boot.Get[uc.AccountListUc](c)
-		return api.NewAccountCtr(createUc, listUc)
+	boot.Register(s.c, func(ctx *boot.Context) *boot.EventBus {
+		return bus
 	})
 }
