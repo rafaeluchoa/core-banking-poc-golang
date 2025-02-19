@@ -2,9 +2,9 @@ package uc
 
 import (
 	"fmt"
-	"nk/account/internal/boot"
 	"nk/account/internal/domain"
 	"nk/account/internal/repo"
+	"nk/account/pkg/boot"
 )
 
 const (

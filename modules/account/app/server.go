@@ -2,8 +2,8 @@ package app
 
 import (
 	"database/sql"
-	"nk/account/api"
-	"nk/account/internal/boot"
+	"nk/account/internal/api"
+	"nk/account/pkg/boot"
 )
 
 const (

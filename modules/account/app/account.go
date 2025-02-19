@@ -2,10 +2,10 @@ package app
 
 import (
 	"database/sql"
-	"nk/account/api"
-	"nk/account/internal/boot"
+	"nk/account/internal/api"
 	"nk/account/internal/repo"
 	"nk/account/internal/uc"
+	"nk/account/pkg/boot"
 )
 
 func (s *server) registerAccount() {
