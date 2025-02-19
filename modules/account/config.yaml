@@ -13,4 +13,4 @@ migration:
 
 bus: 
   broker: localhost:9092
-  groupId: account
+  groupId: ${BUS_GROUP_ID:account}
