@@ -5,6 +5,10 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+
+	_ "nk/account/docs"
+
+	"github.com/gofiber/swagger"
 )
 
 type Controller interface {
@@ -27,6 +31,8 @@ func NewApiApp(config *ApiConfig) *ApiApp {
 		DisableStartupMessage: true,
 		EnablePrintRoutes:     true,
 	})
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	return &ApiApp{
 		app:  app,

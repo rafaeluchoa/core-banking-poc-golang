@@ -1,7 +1,7 @@
 package account
 
 import (
-	"nk/account/internal/api"
+	"nk/account/api"
 	"nk/account/test/e2e"
 	"testing"
 

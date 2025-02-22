@@ -1,0 +1,82 @@
+basePath: /
+definitions:
+  api.Account:
+    properties:
+      customerId:
+        type: string
+      id:
+        type: string
+    type: object
+  api.AccountCreateReq:
+    properties:
+      customerId:
+        type: string
+    type: object
+  api.AccountCreateRes:
+    properties:
+      accountId:
+        type: string
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  api.AccountListRes:
+    properties:
+      accounts:
+        items:
+          $ref: '#/definitions/api.Account'
+        type: array
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Structure that contains the parameters for listing accounts.
+  title: Account API
+  version: "1.0"
+paths:
+  /account:
+    get:
+      consumes:
+      - application/json
+      description: Return account from a customerId
+      parameters:
+      - in: query
+        name: customerId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.AccountListRes'
+      summary: Return account list
+      tags:
+      - accounts
+    post:
+      consumes:
+      - application/json
+      description: Create a new account to a customer
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.AccountCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.AccountCreateRes'
+      summary: Create a new account to a customer
+      tags:
+      - accounts
+swagger: "2.0"

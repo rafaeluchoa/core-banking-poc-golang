@@ -2,7 +2,7 @@ package app
 
 import (
 	"database/sql"
-	"nk/account/internal/api"
+	"nk/account/internal/ctr"
 	"nk/account/pkg/boot"
 )
 
@@ -68,7 +68,7 @@ func (s *server) registerApi() {
 		boot.Load[boot.ApiConfig](s.path, CONFIG, "api"),
 	)
 
-	apiApp.AddController(boot.Get[api.AccountCtr](s.c))
+	apiApp.AddController(boot.Get[ctr.AccountCtr](s.c))
 
 	s.l.Run(apiApp)
 }

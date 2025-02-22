@@ -2,7 +2,7 @@ package app
 
 import (
 	"database/sql"
-	"nk/account/internal/api"
+	"nk/account/internal/ctr"
 	"nk/account/internal/repo"
 	"nk/account/internal/uc"
 	"nk/account/pkg/boot"
@@ -35,10 +35,10 @@ func (s *server) registerAccountUcs() {
 }
 
 func (s *server) registerAccountCtrs() {
-	boot.Register(s.c, func(c *boot.Context) *api.AccountCtr {
+	boot.Register(s.c, func(c *boot.Context) *ctr.AccountCtr {
 
 		createUc := boot.Get[uc.AccountCreateUc](c)
 		listUc := boot.Get[uc.AccountListUc](c)
-		return api.NewAccountCtr(createUc, listUc)
+		return ctr.NewAccountCtr(createUc, listUc)
 	})
 }
