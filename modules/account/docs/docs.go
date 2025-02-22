@@ -91,6 +91,7 @@ const docTemplate = `{
             }
         },
         "api.AccountCreateReq": {
+            "description": "Request",
             "type": "object",
             "properties": {
                 "customerId": {
@@ -99,6 +100,7 @@ const docTemplate = `{
             }
         },
         "api.AccountCreateRes": {
+            "description": "Response",
             "type": "object",
             "properties": {
                 "accountId": {
@@ -113,6 +115,7 @@ const docTemplate = `{
             }
         },
         "api.AccountListRes": {
+            "description": "Response",
             "type": "object",
             "properties": {
                 "accounts": {
@@ -136,10 +139,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Account API",
-	Description:      "Structure that contains the parameters for listing accounts.",
+	Description:      "Response",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

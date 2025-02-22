@@ -1,13 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Structure that contains the parameters for listing accounts.",
+        "description": "Response",
         "title": "Account API",
         "contact": {},
         "version": "1.0"
     },
     "host": "localhost:8080",
-    "basePath": "/",
+    "basePath": "/api/v1",
     "paths": {
         "/account": {
             "get": {
@@ -85,6 +85,7 @@
             }
         },
         "api.AccountCreateReq": {
+            "description": "Request",
             "type": "object",
             "properties": {
                 "customerId": {
@@ -93,6 +94,7 @@
             }
         },
         "api.AccountCreateRes": {
+            "description": "Response",
             "type": "object",
             "properties": {
                 "accountId": {
@@ -107,6 +109,7 @@
             }
         },
         "api.AccountListRes": {
+            "description": "Response",
             "type": "object",
             "properties": {
                 "accounts": {

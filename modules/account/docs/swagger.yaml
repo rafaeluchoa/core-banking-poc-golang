@@ -1,4 +1,4 @@
-basePath: /
+basePath: /api/v1
 definitions:
   api.Account:
     properties:
@@ -8,11 +8,13 @@ definitions:
         type: string
     type: object
   api.AccountCreateReq:
+    description: Request
     properties:
       customerId:
         type: string
     type: object
   api.AccountCreateRes:
+    description: Response
     properties:
       accountId:
         type: string
@@ -22,6 +24,7 @@ definitions:
         type: string
     type: object
   api.AccountListRes:
+    description: Response
     properties:
       accounts:
         items:
@@ -35,7 +38,7 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Structure that contains the parameters for listing accounts.
+  description: Response
   title: Account API
   version: "1.0"
 paths:
