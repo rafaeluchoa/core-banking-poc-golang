@@ -1,4 +1,3 @@
-swagger
 mongo
 coverage
 profiler

@@ -14,3 +14,4 @@ test: testify
 db: pgx
 migration: google-migrate
 bus: kafka (redpanda)
+swagger: swaggo
