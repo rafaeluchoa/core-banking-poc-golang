@@ -20,7 +20,7 @@ func Load[T any](path string, file string, section string) *T {
 		log.Panicf("Error on read: %s\n", err)
 	}
 
-	log.Printf("Config file loaded: %s\n", file)
+	log.Printf("Config loaded: %s\n", file)
 
 	var config T
 	if err := viper.UnmarshalKey(section, &config); err != nil {

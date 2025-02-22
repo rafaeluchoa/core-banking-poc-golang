@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"nk/account/internal/ctr"
 	"nk/account/pkg/boot"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -26,6 +28,7 @@ func Run(path string) *boot.Launcher {
 	s.registerMigration()
 
 	s.registerBus()
+	s.registerMongo()
 
 	s.registerAccount()
 
@@ -63,16 +66,6 @@ func (s *server) registerMigration() {
 	s.l.Run(migration)
 }
 
-func (s *server) registerApi() {
-	apiApp := boot.NewApiApp(
-		boot.Load[boot.ApiConfig](s.path, CONFIG, "api"),
-	)
-
-	apiApp.AddController(boot.Get[ctr.AccountCtr](s.c))
-
-	s.l.Run(apiApp)
-}
-
 func (s *server) registerBus() {
 	bus := boot.NewEventBus(
 		boot.Load[boot.KafkaConfig](s.path, CONFIG, "bus"),
@@ -81,4 +74,32 @@ func (s *server) registerBus() {
 	boot.Register(s.c, func(ctx *boot.Context) *boot.EventBus {
 		return bus
 	})
+}
+
+func (s *server) registerMongo() {
+	db := boot.NewMongoApp(
+		boot.Load[boot.MongoConfig](s.path, CONFIG, "mongo"),
+	)
+	s.l.Run(db)
+
+	boot.Register(s.c, func(c *boot.Context) *mongo.Database {
+		return db.GetDb()
+	})
+}
+
+func (s *server) registerApi() {
+	apiApp := boot.NewApiApp(
+		boot.Load[boot.ApiConfig](s.path, CONFIG, "api"),
+	)
+
+	s.addAuditMid(apiApp)
+
+	apiApp.AddController(boot.Get[ctr.AccountCtr](s.c))
+
+	s.l.Run(apiApp)
+}
+
+func (s *server) addAuditMid(apiApp *boot.ApiApp) {
+	mongo := boot.Get[mongo.Database](s.c)
+	boot.NewAudit(apiApp.App, mongo)
 }

@@ -58,3 +58,48 @@ services:
             urls: ["http://redpanda:9644"]
     entrypoint: /bin/sh
     command: -c 'echo "$$CONSOLE_CONFIG_FILE" > /tmp/config.yml; /app/console'
+
+  mongo:
+    image: mongo:8.0.4
+    container_name: mongo
+    ports:
+      - 27017:27017
+    user: root
+    volumes:
+      - ./compose/mongo/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123
+
+  mongo-express:
+    image: mongo-express:1.0.2-20-alpine3.19
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: 123
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123
+
+  # trino:
+  #   image: trinodb/trino:471
+  #   container_name: trino
+  #   user: root
+  #   ports:
+  #     - "8086:8080"
+  #   depends_on:
+  #     - mongo
+  #     - postgres
+  #   links:
+  #     - mongo
+  #     - postgres
+  #   volumes:
+  #     - ./compose/trino/etc:/etc/trino
+  #     - ./compose/trino/data:/data
+

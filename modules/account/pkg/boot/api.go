@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 
 	_ "nk/account/docs"
 
@@ -21,7 +22,7 @@ type ApiConfig struct {
 }
 
 type ApiApp struct {
-	app  *fiber.App
+	App  *fiber.App
 	port string
 }
 
@@ -32,32 +33,33 @@ func NewApiApp(config *ApiConfig) *ApiApp {
 		EnablePrintRoutes:     true,
 	})
 
+	app.Use("/api/*", logger.New())
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	return &ApiApp{
-		app:  app,
+		App:  app,
 		port: fmt.Sprintf("%s:%s", config.Bind, config.Port),
 	}
 }
 
 func (s *ApiApp) Run(done chan error) {
-	s.app.Hooks().OnListen(func(l fiber.ListenData) error {
+	s.App.Hooks().OnListen(func(l fiber.ListenData) error {
 		if fiber.IsChild() {
 			return nil
 		}
 
-		log.Printf("Loading on %s:%s", l.Host, l.Port)
+		log.Printf("Listening on %s:%s", l.Host, l.Port)
 		done <- nil
 
 		return nil
 	})
 
-	err := s.app.Listen(s.port)
+	err := s.App.Listen(s.port)
 	if err != nil {
 		done <- err
 	}
 }
 
 func (s *ApiApp) AddController(ctr Controller) {
-	ctr.AddRoutes(s.app)
+	ctr.AddRoutes(s.App)
 }

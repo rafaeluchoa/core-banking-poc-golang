@@ -14,3 +14,7 @@ migration:
 bus: 
   broker: localhost:9092
   groupId: ${BUS_GROUP_ID:account}
+
+mongo:
+  url: mongodb://root:123@localhost:27017/auditdb?authSource=admin&authMechanism=SCRAM-SHA-1
+  database: auditdb
