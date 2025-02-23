@@ -32,7 +32,7 @@ func (s *EventBus) NewProducer(topic string) *EventProducer {
 	}
 }
 
-func (s *EventBus) NewConsumer(topic string, handler func(eventId string)) *EventConsumer {
+func (s *EventBus) NewConsumer(topic string) *EventConsumer {
 	return &EventConsumer{
 		reader: kafka.NewReader(kafka.ReaderConfig{
 			Brokers: []string{s.config.Broker},
