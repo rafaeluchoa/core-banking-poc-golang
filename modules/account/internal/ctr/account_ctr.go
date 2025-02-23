@@ -37,14 +37,14 @@ func (s *AccountCtr) AddRoutes(app *fiber.App) {
 	})
 }
 
-func toAccount(d domain.Account) api.Account {
+func toAccount(d *domain.Account) api.Account {
 	return api.Account{
 		Id:         d.Id,
 		CustomerId: d.CustomerId,
 	}
 }
 
-func toListAccount(l []domain.Account) []api.Account {
+func toListAccount(l []*domain.Account) []api.Account {
 	list := make([]api.Account, len(l))
 	for i, d := range l {
 		list[i] = toAccount(d)

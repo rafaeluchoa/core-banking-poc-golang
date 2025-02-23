@@ -23,6 +23,6 @@ func (s *AccountCtr) List(req *api.AccountListReq) *api.AccountListRes {
 	}
 
 	return &api.AccountListRes{
-		Accounts: toListAccount(*accounts),
+		Accounts: toListAccount(accounts),
 	}
 }

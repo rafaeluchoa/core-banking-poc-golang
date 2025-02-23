@@ -9,6 +9,5 @@ curl -LO https://github.com/redpanda-data/redpanda/releases/latest/download/rpk-
 
 rpk connect run ./polling-cdc.yaml
 
-# deploy
 
 

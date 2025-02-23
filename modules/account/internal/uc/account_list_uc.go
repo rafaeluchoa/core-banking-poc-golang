@@ -16,7 +16,7 @@ func NewAccountListUc(accountRepo *repo.AccountRepo) *AccountListUc {
 	}
 }
 
-func (s *AccountListUc) List(customerId string) (*[]domain.Account, error) {
+func (s *AccountListUc) List(customerId string) ([]*domain.Account, error) {
 	accounts, err := s.accountRepo.ListAllByCustomerId(customerId)
 	if err != nil {
 		return nil, fmt.Errorf("create account: %v", err)
