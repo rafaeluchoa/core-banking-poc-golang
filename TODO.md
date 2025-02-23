@@ -1,5 +1,3 @@
-mongo
-coverage
 profiler
 
 # pendent

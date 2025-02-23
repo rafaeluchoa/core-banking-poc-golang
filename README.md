@@ -15,3 +15,5 @@ db: pgx
 migration: google-migrate
 bus: kafka (redpanda)
 swagger: swaggo
+mongo: mongo driver
+coverage: make cover
