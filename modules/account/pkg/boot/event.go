@@ -2,7 +2,9 @@ package boot
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"nk/account/internal/domain"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -50,12 +52,16 @@ type EventConsumer struct {
 	reader *kafka.Reader
 }
 
-func (s *EventProducer) Pub(eventId string) error {
-	err := s.writer.WriteMessages(context.Background(), kafka.Message{
-		Key:   []byte(eventId),
-		Value: []byte(eventId),
-	})
+func (s *EventProducer) Pub(event domain.Event) error {
+	event.EventType = s.writer.Topic
+	payload, err := json.Marshal(event)
+	if err != nil {
+		return fmt.Errorf("error on write message: %v", err)
+	}
 
+	err = s.writer.WriteMessages(context.Background(), kafka.Message{
+		Value: payload,
+	})
 	if err != nil {
 		return fmt.Errorf("error on write message: %v", err)
 	}
@@ -63,15 +69,24 @@ func (s *EventProducer) Pub(eventId string) error {
 	return nil
 }
 
-func (s *EventConsumer) On(handler func(eventId string, err error)) {
+func (s *EventConsumer) On(handler func(*domain.Event, error)) {
 	go func() {
 		for {
 			msg, err := s.reader.ReadMessage(context.Background())
 			if err != nil {
-				handler("", err)
-			} else {
-				handler(string(msg.Value), nil)
+				handler(nil, err)
+				return
 			}
+
+			var event domain.Event
+			err = json.Unmarshal(msg.Value, &event)
+			if err != nil {
+				handler(&event, nil)
+				return
+			}
+
+			event.EventType = s.reader.Config().Topic
+			handler(&event, nil)
 		}
 	}()
 }

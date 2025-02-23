@@ -57,10 +57,10 @@ func (s *AccountCreateUc) Create(customerId string) (*domain.Account, error) {
 	return account, err
 }
 
-func (s *AccountCreateUc) accountStatusChangedHandler(accountId string, err error) {
+func (s *AccountCreateUc) accountStatusChangedHandler(event *domain.Event, err error) {
 	if err != nil {
 		log.Printf("Error on receive %v", err)
 		return
 	}
-	log.Println("Account Created ", accountId)
+	log.Printf("Account Created %v", event.EntityId)
 }
