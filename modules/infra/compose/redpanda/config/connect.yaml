@@ -1,6 +1,6 @@
 input:
   generate:
-    interval: '@every 5s'
+    interval: '@every 15s'
     mapping: 'root = 1'
 
 pipeline:
@@ -8,27 +8,30 @@ pipeline:
     - sql_select:
         driver: postgres
         dsn: postgres://postgres:123@postgres:5432/accountdb?sslmode=disable
-        table: account
-        columns: [ id ]
+        table: event
+        columns: [ id, entity_id, event_type ]
         where: status = 'C'
         suffix: 'order by created_at asc'
     - unarchive:
         format: json_array
     - mapping: |
-        root = json("id")
+        root.id = json("id")
+        root.entity_id = json("entity_id")
+        meta topic = json("event_type")
 output:
   broker:
     pattern: fan_out_sequential
     outputs:
       - kafka:
           addresses: [ "redpanda:9092" ]
-          topic: "account"
+          topic: '${!meta("topic")}'
           client_id: "polling-cdc"
 
-      - sql_insert:
+      - sql_raw:
           driver: postgres
           dsn: postgres://postgres:123@postgres:5432/accountdb?sslmode=disable
-          table: account
-          columns: [ id ]
-          args_mapping: root = [this]
-          suffix: ON CONFLICT(id) DO UPDATE SET status='S'
+          args_mapping: root = [this.id]
+          query: |
+            UPDATE event
+              SET status = 'S'
+            WHERE id = $1

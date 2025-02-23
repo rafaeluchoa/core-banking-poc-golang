@@ -14,15 +14,18 @@ const (
 
 type AccountCreateUc struct {
 	accountRepo *repo.AccountRepo
+	eventRepo   *repo.EventRepo
 	producer    *boot.EventProducer
 }
 
 func NewAccountCreateUc(
 	accountRepo *repo.AccountRepo,
+	eventRepo *repo.EventRepo,
 	eventBus *boot.EventBus,
 ) *AccountCreateUc {
 	uc := &AccountCreateUc{
 		accountRepo: accountRepo,
+		eventRepo:   eventRepo,
 		producer:    eventBus.NewProducer(TOPIC_ACCOUNT_STATUS_CHANGED),
 	}
 
@@ -43,7 +46,13 @@ func (s *AccountCreateUc) Create(customerId string) (*domain.Account, error) {
 		return nil, fmt.Errorf("create account: %v", err)
 	}
 
-	s.producer.Pub(account.Id)
+	// TODO: test
+	s.eventRepo.Create(&domain.Event{
+		Id:        repo.UUID(),
+		EventType: TOPIC_ACCOUNT_STATUS_CHANGED,
+		EntityId:  account.Id,
+	})
+	// s.producer.Pub(account.Id)
 
 	return account, err
 }

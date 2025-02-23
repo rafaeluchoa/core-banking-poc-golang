@@ -19,13 +19,19 @@ func (s *server) registerAccountRepos() {
 		db := boot.Get[sql.DB](c)
 		return repo.NewAccountRepo(db)
 	})
+
+	boot.Register(s.c, func(c *boot.Context) *repo.EventRepo {
+		db := boot.Get[sql.DB](c)
+		return repo.NewEventRepo(db)
+	})
 }
 
 func (s *server) registerAccountUcs() {
 	boot.Register(s.c, func(c *boot.Context) *uc.AccountCreateUc {
-		repo := boot.Get[repo.AccountRepo](c)
+		accountRepo := boot.Get[repo.AccountRepo](c)
+		eventRepo := boot.Get[repo.EventRepo](c)
 		eventBus := boot.Get[boot.EventBus](c)
-		return uc.NewAccountCreateUc(repo, eventBus)
+		return uc.NewAccountCreateUc(accountRepo, eventRepo, eventBus)
 	})
 
 	boot.Register(s.c, func(c *boot.Context) *uc.AccountListUc {
