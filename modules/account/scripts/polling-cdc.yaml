@@ -1,0 +1,34 @@
+input:
+  generate:
+    interval: '@every 5s'
+    mapping: 'root = 1'
+
+pipeline:
+  processors:
+    - sql_select:
+        driver: postgres
+        dsn: postgres://postgres:123@localhost:5432/accountdb?sslmode=disable
+        table: account
+        columns: [ id ]
+        where: status = 'C'
+        suffix: 'order by created_at asc'
+    - unarchive:
+        format: json_array
+    - mapping: |
+        root = json("id")
+output:
+  broker:
+    pattern: fan_out_sequential
+    outputs:
+      - kafka:
+          addresses: [ "localhost:9092" ]
+          topic: "account"
+          client_id: "polling-cdc"
+
+      - sql_insert:
+          driver: postgres
+          dsn: postgres://postgres:123@localhost:5432/accountdb?sslmode=disable
+          table: account
+          columns: [ id ]
+          args_mapping: root = [this]
+          suffix: ON CONFLICT(id) DO UPDATE SET status='S'

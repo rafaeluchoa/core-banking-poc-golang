@@ -38,6 +38,17 @@ services:
       - --smp 1
       - --default-log-level=info
 
+  connect:
+    image: docker.redpanda.com/redpandadata/connect:4.48.0-rc2
+    container_name: connect
+    ports:
+      - 4195:4195
+    user: root
+    volumes:
+      - ./compose/redpanda/config/connect.yaml:/connect.yaml
+    command:
+      - run
+
   console:
     image: docker.redpanda.com/redpandadata/console:v2.8.2
     container_name: console
