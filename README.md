@@ -21,7 +21,7 @@ bus: kafka (redpanda)
 
 swagger: swaggo
 
-mongo: mongo driver
+nosql: mongo driver
 
 coverage: make cover
 
