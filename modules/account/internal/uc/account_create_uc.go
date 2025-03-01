@@ -46,7 +46,7 @@ func (s *AccountCreateUc) Create(customerId string) (*domain.Account, error) {
 		return nil, fmt.Errorf("create account: %v", err)
 	}
 
-	// TODO: test
+	// TODO: test, modified to CDC, testing for while
 	s.eventRepo.Create(&domain.Event{
 		Id:        repo.UUID(),
 		EventType: TOPIC_ACCOUNT_STATUS_CHANGED,
