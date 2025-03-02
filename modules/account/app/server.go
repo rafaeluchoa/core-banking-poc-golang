@@ -17,14 +17,13 @@ func Start() {
 }
 
 func Run(path string) *boot.Launcher {
-
 	s := &server{
 		path: path,
 		c:    boot.NewContext(),
 		l:    boot.NewLauncher(),
 	}
 
-	s.registerDb()
+	s.registerDB()
 	s.registerMigration()
 
 	s.registerBus()
@@ -43,14 +42,14 @@ type server struct {
 	l    *boot.Launcher
 }
 
-func (s *server) registerDb() {
-	db := boot.NewDbApp(
-		boot.Load[boot.DbConfig](s.path, CONFIG, "db"),
+func (s *server) registerDB() {
+	db := boot.NewDBApp(
+		boot.Load[boot.DBConfig](s.path, CONFIG, "db"),
 	)
 	s.l.Run(db)
 
 	boot.Register(s.c, func(_ *boot.Context) *sql.DB {
-		return db.GetDb()
+		return db.GetDB()
 	})
 }
 
@@ -83,7 +82,7 @@ func (s *server) registerMongo() {
 	s.l.Run(db)
 
 	boot.Register(s.c, func(_ *boot.Context) *mongo.Database {
-		return db.GetDb()
+		return db.GetDB()
 	})
 }
 

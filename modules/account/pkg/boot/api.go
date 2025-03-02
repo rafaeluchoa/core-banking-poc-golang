@@ -27,7 +27,6 @@ type APIApp struct {
 }
 
 func NewAPIApp(config *APIConfig) *APIApp {
-
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		EnablePrintRoutes:     true,

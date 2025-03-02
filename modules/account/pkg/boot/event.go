@@ -55,6 +55,7 @@ type EventConsumer struct {
 func (s *EventProducer) Pub(event domain.Event) error {
 	event.EventType = s.writer.Topic
 	payload, err := json.Marshal(event)
+
 	if err != nil {
 		return fmt.Errorf("error on write message: %v", err)
 	}
@@ -80,6 +81,7 @@ func (s *EventConsumer) On(handler func(*domain.Event, error)) {
 
 			var event domain.Event
 			err = json.Unmarshal(msg.Value, &event)
+
 			if err != nil {
 				handler(&event, nil)
 				return

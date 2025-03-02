@@ -39,6 +39,7 @@ func (s *MigrationApp) Run(done chan error) {
 	source := fmt.Sprintf("file://%s%s", s.path, s.config.Dir)
 	m, err := migrate.NewWithDatabaseInstance(
 		source, s.config.Name, driver)
+
 	if err != nil {
 		done <- err
 		log.Panicf("Error on migration %v", err)

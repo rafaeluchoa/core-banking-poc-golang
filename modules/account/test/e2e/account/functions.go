@@ -9,6 +9,8 @@ import (
 )
 
 func CreateAccount(t *testing.T, customerID string) string {
+	t.Helper()
+
 	// Setup
 	e2e.Setup()
 

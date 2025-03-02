@@ -58,6 +58,7 @@ func (s *AuditMid) handle(c *fiber.Ctx) error {
 	}
 
 	headers := make(map[string]string)
+
 	c.Request().Header.VisitAll(func(key, value []byte) {
 		headerKey := strings.ToLower(string(key))
 		if !slices.Contains(commonHeaders, headerKey) {
@@ -89,6 +90,7 @@ func (s *AuditMid) handle(c *fiber.Ctx) error {
 func (s *AuditMid) insertLog(logEntry LogEntry) {
 	tracelog := s.mongo.Collection("tracelog")
 	_, errMongo := tracelog.InsertOne(context.Background(), logEntry)
+
 	if errMongo != nil {
 		log.Println("Error on insert mongo:", errMongo)
 	}

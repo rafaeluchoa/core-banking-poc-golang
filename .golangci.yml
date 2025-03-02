@@ -1,15 +1,30 @@
 linters:
   enable:
-    - revive
-    - errcheck
-    - staticcheck
-    - gocyclo
     - bodyclose
-    - gofmt
-    - goimports
-    - gosec
+    - gocognit
+    - dogsled
+    - dupword
+    - errchkjson
+    - gocyclo
+    - loggercheck
+    - ineffassign
+    - wsl
+    - misspell
+    - nakedret
+    - nilerr
+    - nolintlint
+    - prealloc
+    - predeclared
+    - reassign
+    - revive
+    - stylecheck
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
     - unused
-    - dupl
-    - typecheck
-    - gocritic
+    - usestdlibvars
+    - wastedassign
+    - errcheck
+
 

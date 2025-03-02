@@ -8,24 +8,24 @@ import (
 	"github.com/jackc/pgx/v5/stdlib"
 )
 
-type DbConfig struct {
+type DBConfig struct {
 	URL      string
 	User     string
 	Password string
 }
 
-type DbApp struct {
-	config *DbConfig
+type DBApp struct {
+	config *DBConfig
 	db     *sql.DB
 }
 
-func NewDbApp(config *DbConfig) *DbApp {
-	return &DbApp{
+func NewDBApp(config *DBConfig) *DBApp {
+	return &DBApp{
 		config: config,
 	}
 }
 
-func (s *DbApp) Run(done chan error) {
+func (s *DBApp) Run(done chan error) {
 	pgxConfig, err := pgxpool.ParseConfig(s.config.URL)
 	if err != nil {
 		done <- err
@@ -37,6 +37,7 @@ func (s *DbApp) Run(done chan error) {
 
 	connStr := stdlib.RegisterConnConfig(pgxConfig.ConnConfig)
 	db, err := sql.Open("pgx", connStr)
+
 	if err != nil {
 		done <- err
 		log.Panicf("Error on connect %v", err)
@@ -49,10 +50,11 @@ func (s *DbApp) Run(done chan error) {
 	}
 
 	s.db = db
+
 	log.Println("DB Connected")
 	done <- nil
 }
 
-func (s DbApp) GetDb() *sql.DB {
+func (s DBApp) GetDB() *sql.DB {
 	return s.db
 }

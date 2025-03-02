@@ -15,7 +15,6 @@ type Launcher struct {
 }
 
 func NewLauncher() *Launcher {
-
 	l := &Launcher{
 		wg:   new(sync.WaitGroup),
 		apps: make([]*App, 0),
@@ -27,6 +26,7 @@ func NewLauncher() *Launcher {
 func (s *Launcher) Run(app App) {
 	s.apps = append(s.apps, &app)
 	s.wg.Add(1)
+
 	done := make(chan error)
 
 	go func() {

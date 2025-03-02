@@ -27,18 +27,22 @@ func (s *AccountCtr) AddRoutes(app *fiber.App) {
 	app.Get(api.APIAccount, func(c *fiber.Ctx) error {
 		var req api.AccountListReq
 		err := c.QueryParser(&req)
+
 		if err != nil {
 			return err
 		}
+
 		return c.JSON(s.List(&req))
 	})
 
 	app.Post(api.APIAccount, func(c *fiber.Ctx) error {
 		var req api.AccountCreateReq
 		err := c.BodyParser(&req)
+
 		if err != nil {
 			return err
 		}
+
 		return c.JSON(s.Create(&req))
 	})
 }
@@ -55,5 +59,6 @@ func toListAccount(l []*domain.Account) []api.Account {
 	for i, d := range l {
 		list[i] = toAccount(d)
 	}
+
 	return list
 }

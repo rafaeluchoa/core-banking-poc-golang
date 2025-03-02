@@ -11,7 +11,6 @@ import (
 )
 
 func Load[T any](path string, file string, section string) *T {
-
 	viper.AddConfigPath(path)
 	viper.SetConfigName(file)
 	viper.SetConfigType("yaml")

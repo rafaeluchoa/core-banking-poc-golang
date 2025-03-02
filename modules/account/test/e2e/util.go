@@ -20,6 +20,7 @@ var runSetup = true
 func Setup() {
 	if runSetup {
 		runSetup = false
+
 		app.Run("../../../")
 	}
 }
@@ -32,6 +33,7 @@ func Get[T any](uri string, req any) *T {
 
 	var reqMap map[string]interface{}
 	err = json.Unmarshal(reqJSON, &reqMap)
+
 	if err != nil {
 		log.Panic(err)
 	}
@@ -63,7 +65,7 @@ func Post[T any](uri string, req any) *T {
 	}
 
 	resp, err := http.Post(URL+uri, "application/json",
-		bytes.NewBuffer([]byte(reqJSON)))
+		bytes.NewBuffer(reqJSON))
 	if err != nil {
 		log.Panic(err)
 	}
@@ -83,6 +85,7 @@ func fromJSON[T any](resp *http.Response, uri string, reqJSON []byte) *T {
 
 	var result T
 	err = json.Unmarshal(body, &result)
+
 	if err != nil {
 		log.Panic(err)
 	}

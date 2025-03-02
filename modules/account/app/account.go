@@ -31,6 +31,7 @@ func (s *server) registerAccountUcs() {
 		accountRepo := boot.Get[repo.AccountRepo](c)
 		eventRepo := boot.Get[repo.EventRepo](c)
 		eventBus := boot.Get[boot.EventBus](c)
+
 		return uc.NewAccountCreateUc(accountRepo, eventRepo, eventBus)
 	})
 
@@ -42,9 +43,9 @@ func (s *server) registerAccountUcs() {
 
 func (s *server) registerAccountCtrs() {
 	boot.Register(s.c, func(c *boot.Context) *ctr.AccountCtr {
-
 		createUc := boot.Get[uc.AccountCreateUc](c)
 		listUc := boot.Get[uc.AccountListUc](c)
+
 		return ctr.NewAccountCtr(createUc, listUc)
 	})
 }

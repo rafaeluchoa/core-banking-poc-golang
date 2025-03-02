@@ -65,5 +65,6 @@ func (s *AccountCreateUc) accountStatusChangedHandler(event *domain.Event, err e
 		log.Printf("Error on receive %v", err)
 		return
 	}
+
 	log.Printf("Account Created %v", event.EntityID)
 }

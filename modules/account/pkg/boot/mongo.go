@@ -43,10 +43,11 @@ func (s *MongoApp) Run(done chan error) {
 	_ = db
 
 	s.db = db
+
 	log.Println("Mongo Connected")
 	done <- nil
 }
 
-func (s MongoApp) GetDb() *mongo.Database {
+func (s MongoApp) GetDB() *mongo.Database {
 	return s.db
 }

@@ -42,6 +42,7 @@ func (s *Repository[T]) row(builder squirrel.SelectBuilder) (*T, error) {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("record not found")
 		}
+
 		return nil, fmt.Errorf("failed to scan record: %v", err)
 	}
 
@@ -61,12 +62,15 @@ func (s *Repository[T]) rows(builder squirrel.SelectBuilder) ([]*T, error) {
 	defer rows.Close()
 
 	var slice []*T
+
 	for rows.Next() {
 		instance := s.factory()
 		fields := s.fields(instance)
+
 		if err := rows.Scan(fields...); err != nil {
 			return nil, fmt.Errorf("failed to scan record: %v", err)
 		}
+
 		slice = append(slice, instance)
 	}
 

@@ -37,6 +37,7 @@ func Get[T any](c *Context) *T {
 	if factory, exists := c.Factories[key]; exists {
 		instance := factory(c).(*T)
 		c.Instances[key] = instance
+
 		return instance
 	}
 
