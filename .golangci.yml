@@ -5,4 +5,11 @@ linters:
     - staticcheck
     - gocyclo
     - bodyclose
+    - gofmt
+    - goimports
+    - gosec
+    - unused
+    - dupl
+    - typecheck
+    - gocritic
 

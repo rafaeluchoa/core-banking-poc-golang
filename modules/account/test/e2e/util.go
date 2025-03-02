@@ -46,6 +46,7 @@ func Get[T any](uri string, req any) *T {
 		baseURL += "?" + queryParams.Encode()
 	}
 
+	// #nosec G107: using const url base
 	resp, err := http.Get(baseURL)
 	if err != nil {
 		log.Panic(err)
