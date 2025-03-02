@@ -14,7 +14,7 @@ import (
 // @Success 200 {object} api.AccountCreateRes
 // @Router /account [post]
 func (s *AccountCtr) Create(req *api.AccountCreateReq) *api.AccountCreateRes {
-	account, err := s.createUc.Create(req.CustomerId)
+	account, err := s.createUc.Create(req.CustomerID)
 	if err != nil {
 		return &api.AccountCreateRes{
 			Response: api.Response{
@@ -25,6 +25,6 @@ func (s *AccountCtr) Create(req *api.AccountCreateReq) *api.AccountCreateRes {
 	}
 
 	return &api.AccountCreateRes{
-		AccountId: account.Id,
+		AccountID: account.ID,
 	}
 }

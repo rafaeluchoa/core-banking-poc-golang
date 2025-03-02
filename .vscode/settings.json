@@ -3,5 +3,6 @@
     "go.coverageDecorator": {
         "type": "highlight"
     },
-    "go.coverageOptions": "showUncoveredCodeOnly"
-}
+    "go.coverageOptions": "showUncoveredCodeOnly",
+    "go.lintTool": "golangci-lint"
+  }

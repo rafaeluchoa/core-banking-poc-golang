@@ -32,7 +32,7 @@ func Run(path string) *boot.Launcher {
 
 	s.registerAccount()
 
-	s.registerApi()
+	s.registerAPI()
 
 	return s.l
 }
@@ -49,7 +49,7 @@ func (s *server) registerDb() {
 	)
 	s.l.Run(db)
 
-	boot.Register(s.c, func(c *boot.Context) *sql.DB {
+	boot.Register(s.c, func(_ *boot.Context) *sql.DB {
 		return db.GetDb()
 	})
 }
@@ -71,7 +71,7 @@ func (s *server) registerBus() {
 		boot.Load[boot.KafkaConfig](s.path, CONFIG, "bus"),
 	)
 
-	boot.Register(s.c, func(ctx *boot.Context) *boot.EventBus {
+	boot.Register(s.c, func(_ *boot.Context) *boot.EventBus {
 		return bus
 	})
 }
@@ -82,14 +82,14 @@ func (s *server) registerMongo() {
 	)
 	s.l.Run(db)
 
-	boot.Register(s.c, func(c *boot.Context) *mongo.Database {
+	boot.Register(s.c, func(_ *boot.Context) *mongo.Database {
 		return db.GetDb()
 	})
 }
 
-func (s *server) registerApi() {
-	apiApp := boot.NewApiApp(
-		boot.Load[boot.ApiConfig](s.path, CONFIG, "api"),
+func (s *server) registerAPI() {
+	apiApp := boot.NewAPIApp(
+		boot.Load[boot.APIConfig](s.path, CONFIG, "api"),
 	)
 
 	s.addAuditMid(apiApp)
@@ -99,7 +99,7 @@ func (s *server) registerApi() {
 	s.l.Run(apiApp)
 }
 
-func (s *server) addAuditMid(apiApp *boot.ApiApp) {
+func (s *server) addAuditMid(apiApp *boot.APIApp) {
 	mongo := boot.Get[mongo.Database](s.c)
 	boot.NewAudit(apiApp.App, mongo)
 }

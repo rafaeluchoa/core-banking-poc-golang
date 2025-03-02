@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 
-	_ "nk/account/docs"
+	_ "nk/account/docs" // swagger docs
 
 	"github.com/gofiber/swagger"
 )
@@ -16,17 +16,17 @@ type Controller interface {
 	AddRoutes(app *fiber.App)
 }
 
-type ApiConfig struct {
+type APIConfig struct {
 	Port string
 	Bind string
 }
 
-type ApiApp struct {
+type APIApp struct {
 	App  *fiber.App
 	port string
 }
 
-func NewApiApp(config *ApiConfig) *ApiApp {
+func NewAPIApp(config *APIConfig) *APIApp {
 
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
@@ -36,13 +36,13 @@ func NewApiApp(config *ApiConfig) *ApiApp {
 	app.Use("/api/*", logger.New())
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
-	return &ApiApp{
+	return &APIApp{
 		App:  app,
 		port: fmt.Sprintf("%s:%s", config.Bind, config.Port),
 	}
 }
 
-func (s *ApiApp) Run(done chan error) {
+func (s *APIApp) Run(done chan error) {
 	s.App.Hooks().OnListen(func(l fiber.ListenData) error {
 		if fiber.IsChild() {
 			return nil
@@ -60,6 +60,6 @@ func (s *ApiApp) Run(done chan error) {
 	}
 }
 
-func (s *ApiApp) AddController(ctr Controller) {
+func (s *APIApp) AddController(ctr Controller) {
 	ctr.AddRoutes(s.App)
 }

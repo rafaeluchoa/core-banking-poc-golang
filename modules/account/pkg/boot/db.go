@@ -9,7 +9,7 @@ import (
 )
 
 type DbConfig struct {
-	Url      string
+	URL      string
 	User     string
 	Password string
 }
@@ -26,7 +26,7 @@ func NewDbApp(config *DbConfig) *DbApp {
 }
 
 func (s *DbApp) Run(done chan error) {
-	pgxConfig, err := pgxpool.ParseConfig(s.config.Url)
+	pgxConfig, err := pgxpool.ParseConfig(s.config.URL)
 	if err != nil {
 		done <- err
 		log.Panicf("Error on parse url: %v", err)

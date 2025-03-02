@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	TOPIC_ACCOUNT_STATUS_CHANGED = "AccountStatusChanged"
+	TopicAccountStatusChanged = "AccountStatusChanged"
 )
 
 type AccountCreateUc struct {
@@ -26,19 +26,19 @@ func NewAccountCreateUc(
 	uc := &AccountCreateUc{
 		accountRepo: accountRepo,
 		eventRepo:   eventRepo,
-		producer:    eventBus.NewProducer(TOPIC_ACCOUNT_STATUS_CHANGED),
+		producer:    eventBus.NewProducer(TopicAccountStatusChanged),
 	}
 
-	eventBus.NewConsumer(TOPIC_ACCOUNT_STATUS_CHANGED).
+	eventBus.NewConsumer(TopicAccountStatusChanged).
 		On(uc.accountStatusChangedHandler)
 
 	return uc
 }
 
-func (s *AccountCreateUc) Create(customerId string) (*domain.Account, error) {
+func (s *AccountCreateUc) Create(customerID string) (*domain.Account, error) {
 	account := &domain.Account{
-		Id:         repo.UUID(),
-		CustomerId: customerId,
+		ID:         repo.UUID(),
+		CustomerID: customerID,
 	}
 
 	err := s.accountRepo.Create(account)
@@ -47,11 +47,14 @@ func (s *AccountCreateUc) Create(customerId string) (*domain.Account, error) {
 	}
 
 	// TODO: test, modified to CDC, testing for while
-	s.eventRepo.Create(&domain.Event{
-		Id:        repo.UUID(),
-		EventType: TOPIC_ACCOUNT_STATUS_CHANGED,
-		EntityId:  account.Id,
+	err = s.eventRepo.Create(&domain.Event{
+		ID:        repo.UUID(),
+		EventType: TopicAccountStatusChanged,
+		EntityID:  account.ID,
 	})
+	if err != nil {
+		return nil, err
+	}
 	// s.producer.Pub(account.Id)
 
 	return account, err
@@ -62,5 +65,5 @@ func (s *AccountCreateUc) accountStatusChangedHandler(event *domain.Event, err e
 		log.Printf("Error on receive %v", err)
 		return
 	}
-	log.Printf("Account Created %v", event.EntityId)
+	log.Printf("Account Created %v", event.EntityID)
 }

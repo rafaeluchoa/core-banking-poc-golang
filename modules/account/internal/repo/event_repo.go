@@ -21,9 +21,9 @@ func NewEventRepo(db *sql.DB) *EventRepo {
 			},
 			fields: func(instance *domain.Event) []any {
 				return []any{
-					&instance.Id,
+					&instance.ID,
 					&instance.EventType,
-					&instance.EntityId,
+					&instance.EntityID,
 				}
 			},
 		},
@@ -33,6 +33,6 @@ func NewEventRepo(db *sql.DB) *EventRepo {
 func (s *EventRepo) Create(event *domain.Event) error {
 	return s.exec(s.p.Insert("event").
 		Columns("id", "event_type", "entity_id").
-		Values(event.Id, event.EventType, event.EntityId),
+		Values(event.ID, event.EventType, event.EntityID),
 	)
 }

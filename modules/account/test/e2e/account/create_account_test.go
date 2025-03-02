@@ -14,16 +14,16 @@ func TestCreateAccountSuccess(t *testing.T) {
 	e2e.Setup()
 
 	// Arrange
-	customerId := repo.UUID()
+	customerID := repo.UUID()
 
 	req := &api.AccountCreateReq{
-		CustomerId: customerId,
+		CustomerID: customerID,
 	}
 
 	// Act
-	res := e2e.Post[api.AccountCreateRes](api.API_ACCOUNT, req)
+	res := e2e.Post[api.AccountCreateRes](api.APIAccount, req)
 
 	// Assert
 	assert.Empty(t, res.Message)
-	assert.NotEmpty(t, res.AccountId)
+	assert.NotEmpty(t, res.AccountID)
 }

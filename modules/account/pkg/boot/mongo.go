@@ -9,7 +9,7 @@ import (
 )
 
 type MongoConfig struct {
-	Url      string
+	URL      string
 	Database string
 }
 
@@ -25,7 +25,7 @@ func NewMongoApp(config *MongoConfig) *MongoApp {
 }
 
 func (s *MongoApp) Run(done chan error) {
-	clientOptions := options.Client().ApplyURI(s.config.Url)
+	clientOptions := options.Client().ApplyURI(s.config.URL)
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {

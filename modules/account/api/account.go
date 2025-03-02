@@ -6,12 +6,12 @@
 package api
 
 const (
-	API_ACCOUNT = "/api/v1/account"
+	APIAccount = "/api/v1/account"
 )
 
 type Account struct {
-	Id         string
-	CustomerId string
+	ID         string
+	CustomerID string
 }
 
 // List
@@ -19,7 +19,7 @@ type Account struct {
 // @Description Request
 // @Param customerId query string true "Customer ID"
 type AccountListReq struct {
-	CustomerId string `json:"customerId"`
+	CustomerID string `json:"customerId"`
 }
 
 // @Description Response
@@ -34,12 +34,12 @@ type AccountListRes struct {
 // @Description Request
 // @Param customerId body string true "Customer ID"
 type AccountCreateReq struct {
-	CustomerId string `json:"customerId"`
+	CustomerID string `json:"customerId"`
 }
 
 // @Description Response
 // @Param accountId body string true "Account ID"
 type AccountCreateRes struct {
 	Response
-	AccountId string `json:"accountId"`
+	AccountID string `json:"accountId"`
 }

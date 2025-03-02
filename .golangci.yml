@@ -1,0 +1,8 @@
+linters:
+  enable:
+    - revive
+    - errcheck
+    - staticcheck
+    - gocyclo
+    - bodyclose
+

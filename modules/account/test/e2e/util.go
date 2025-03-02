@@ -25,13 +25,13 @@ func Setup() {
 }
 
 func Get[T any](uri string, req any) *T {
-	reqJson, err := json.Marshal(req)
+	reqJSON, err := json.Marshal(req)
 	if err != nil {
 		log.Panic(err)
 	}
 
 	var reqMap map[string]interface{}
-	err = json.Unmarshal(reqJson, &reqMap)
+	err = json.Unmarshal(reqJSON, &reqMap)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -52,33 +52,33 @@ func Get[T any](uri string, req any) *T {
 	}
 	defer resp.Body.Close()
 
-	return fromJson[T](resp, uri, reqJson)
+	return fromJSON[T](resp, uri, reqJSON)
 }
 
 func Post[T any](uri string, req any) *T {
-	reqJson, err := json.Marshal(req)
+	reqJSON, err := json.Marshal(req)
 	if err != nil {
 		log.Panic(err)
 	}
 
 	resp, err := http.Post(URL+uri, "application/json",
-		bytes.NewBuffer([]byte(reqJson)))
+		bytes.NewBuffer([]byte(reqJSON)))
 	if err != nil {
 		log.Panic(err)
 	}
 	defer resp.Body.Close()
 
-	return fromJson[T](resp, uri, reqJson)
+	return fromJSON[T](resp, uri, reqJSON)
 }
 
-func fromJson[T any](resp *http.Response, uri string, reqJson []byte) *T {
+func fromJSON[T any](resp *http.Response, uri string, reqJSON []byte) *T {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	respJson := string(body)
-	log.Printf("%s\n>> %s\n<< %s\n", uri, reqJson, respJson)
+	respJSON := string(body)
+	log.Printf("%s\n>> %s\n<< %s\n", uri, reqJSON, respJSON)
 
 	var result T
 	err = json.Unmarshal(body, &result)

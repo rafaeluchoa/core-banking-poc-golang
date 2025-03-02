@@ -11,7 +11,7 @@ import (
 
 type KafkaConfig struct {
 	Broker  string
-	GroupId string
+	GroupID string
 }
 
 type EventBus struct {
@@ -39,7 +39,7 @@ func (s *EventBus) NewConsumer(topic string) *EventConsumer {
 		reader: kafka.NewReader(kafka.ReaderConfig{
 			Brokers: []string{s.config.Broker},
 			Topic:   topic,
-			GroupID: s.config.GroupId,
+			GroupID: s.config.GroupID,
 		}),
 	}
 }

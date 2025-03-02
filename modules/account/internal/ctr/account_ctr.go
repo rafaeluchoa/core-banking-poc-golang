@@ -24,23 +24,29 @@ func NewAccountCtr(
 }
 
 func (s *AccountCtr) AddRoutes(app *fiber.App) {
-	app.Get(api.API_ACCOUNT, func(c *fiber.Ctx) error {
+	app.Get(api.APIAccount, func(c *fiber.Ctx) error {
 		var req api.AccountListReq
-		c.QueryParser(&req)
+		err := c.QueryParser(&req)
+		if err != nil {
+			return err
+		}
 		return c.JSON(s.List(&req))
 	})
 
-	app.Post(api.API_ACCOUNT, func(c *fiber.Ctx) error {
+	app.Post(api.APIAccount, func(c *fiber.Ctx) error {
 		var req api.AccountCreateReq
-		c.BodyParser(&req)
+		err := c.BodyParser(&req)
+		if err != nil {
+			return err
+		}
 		return c.JSON(s.Create(&req))
 	})
 }
 
 func toAccount(d *domain.Account) api.Account {
 	return api.Account{
-		Id:         d.Id,
-		CustomerId: d.CustomerId,
+		ID:         d.ID,
+		CustomerID: d.CustomerID,
 	}
 }
 

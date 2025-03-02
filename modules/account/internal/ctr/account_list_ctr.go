@@ -12,7 +12,7 @@ import "nk/account/api"
 // @Success 200 {object} api.AccountListRes
 // @Router /account [get]
 func (s *AccountCtr) List(req *api.AccountListReq) *api.AccountListRes {
-	accounts, err := s.listUc.List(req.CustomerId)
+	accounts, err := s.listUc.List(req.CustomerID)
 	if err != nil {
 		return &api.AccountListRes{
 			Response: api.Response{
