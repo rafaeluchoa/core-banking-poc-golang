@@ -4,7 +4,7 @@ import (
 	"nk/account/api"
 )
 
-// CreateAccount List accounts by customerId
+// Create an account to a customer
 // @Summary Create a new account to a customer
 // @Description Create a new account to a customer
 // @Tags accounts
